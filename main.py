@@ -1,4 +1,21 @@
+import numpy as np
+import pandas as pd  # To read the file
+import warnings
+
+warnings.filterwarnings('ignore')
+from sklearn.preprocessing import LabelEncoder  # Label Encoding process (In the preprocessing part)
+from sklearn.preprocessing import FunctionTransformer  # Transformation process (In the preprocessing part)
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import \
+    cross_val_score  # Computes scores through cross-validation for model performance evaluation.
+from sklearn.model_selection import \
+    train_test_split  # Splits a dataset into training and testing subsets for model assessment.
+from xgboost import XGBClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score
 import streamlit as st
+
 
 # -*- coding: utf-8 -*-
 """Banking_Classification (2) (1).ipynb
@@ -14,43 +31,26 @@ Original file is located at
 """
 
 # Commented out IPython magic to ensure Python compatibility.
-import numpy as np
-import pandas as pd # To read the file
-import warnings
-warnings.filterwarnings('ignore')
-from sklearn.preprocessing import LabelEncoder # Label Encoding process (In the preprocessing part)
-from sklearn.preprocessing import FunctionTransformer # Transformation process (In the preprocessing part)
-from sklearn.preprocessing import StandardScaler # Feature Scaling process (In the preprocessing part)
+  # Feature Scaling process (In the preprocessing part)
 
 """## Loading the dataset"""
 
-csv_file_path ="bank-additional.csv" # Local path of the .csv file
+csv_file_path = "bank-additional.csv"  # Local path of the .csv file
 
-data = pd.read_csv(csv_file_path, sep=';') # Loading the data set into the "data" variable by seperating w.r.t ';'
-
+data = pd.read_csv(csv_file_path, sep=';')  # Loading the data set into the "data" variable by seperating w.r.t ';'
 
 """## Analyzing the dataset before the preprocessing"""
 
 # Finding unique values for each column and storing in the variable "unique_values"
 unique_values = data.nunique()
 
-# Displaying the unique values to examine dataset
-unique_values
-
-# Checking for null values and their counts
-data.isna().sum()
-
-# Checking for duplicate values
-data.duplicated().any()
-
-# We can clearly see that "previous" column has negatively skewed distribution. (Concentration on smaller values)
-
 """## Preprocessing the dataset
 
 ### Seperating the categorical and numeric columns into the variables "categorical_cols" and "numeric_cols"
 """
 
-categorical_cols = ['job', 'marital', 'education', 'default','contact','housing', 'loan', 'month', 'day_of_week', 'poutcome', "y"]
+categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
+                    'poutcome', "y"]
 numeric_cols = [col for col in data.columns if col not in categorical_cols]
 
 print("Categorical Columns: " + str(categorical_cols))
@@ -59,7 +59,7 @@ print("\nNumeric Columns: " + str(numeric_cols))
 """### Finding the outliers on the dataset by Interquartile Method and changing them to upper limit value for that column"""
 
 ### !!!!!
-numeric_cols.remove("previous") # Causes error on correlation matrix?
+numeric_cols.remove("previous")  # Causes error on correlation matrix?
 
 for column in numeric_cols:
     # Calculating quartiles and interquartile range
@@ -67,10 +67,9 @@ for column in numeric_cols:
     Q3 = data[column].quantile(0.75)
     IQR = Q3 - Q1
 
-    upper_limit = Q3 + 1.5 * IQR # Determining the upper limit
+    upper_limit = Q3 + 1.5 * IQR  # Determining the upper limit
 
-    data.loc[data[column] > upper_limit, column] = upper_limit # Replace outliers with the upper limit
-
+    data.loc[data[column] > upper_limit, column] = upper_limit  # Replace outliers with the upper limit
 
 # z score method (Not in use because it changes all of the values no matter the threshold value. There may be an implementation mistake.)
 """
@@ -89,15 +88,17 @@ for column in numeric_cols:
 for col in categorical_cols:
     data[col] = LabelEncoder().fit_transform(data[col])
 
-data.head() # Printing the data to observe the change (For example, for month column, may got the value 6 and jun got the value 4)
+data.head()  # Printing the data to observe the change (For example, for month column, may got the value 6 and jun got the value 4)
 
 """### Transformation w.r.t analysis on the distributions."""
 
-logarithm_transformer = FunctionTransformer(np.log1p, validate=True) # Log transform instance from the Function Transformer
-exp_transformer = FunctionTransformer(lambda x:x**2, validate=True) # x² transform instance from the Function Transformer (Manually)
+logarithm_transformer = FunctionTransformer(np.log1p,
+                                            validate=True)  # Log transform instance from the Function Transformer
+exp_transformer = FunctionTransformer(lambda x: x ** 2,
+                                      validate=True)  # x² transform instance from the Function Transformer (Manually)
 
-#Applying log transforms for the negatively skewed columns.
-columns = ['age', 'duration', 'campaign', 'previous'] # Determined by analyzing the distributions of the columns
+# Applying log transforms for the negatively skewed columns.
+columns = ['age', 'duration', 'campaign', 'previous']  # Determined by analyzing the distributions of the columns
 
 negatively_skewed = logarithm_transformer.transform(data[columns])
 data['age'] = negatively_skewed[:, 0]
@@ -105,62 +106,54 @@ data['duration'] = negatively_skewed[:, 1]
 data['campaign'] = negatively_skewed[:, 2]
 data['previous'] = negatively_skewed[:, 3]
 
-#Applying x² transforms for the negatively skewed columns.
-columns = ['nr.employed']# Determined by analyzing the distributions of the columns
+# Applying x² transforms for the negatively skewed columns.
+columns = ['nr.employed']  # Determined by analyzing the distributions of the columns
 
 positively_skewed = exp_transformer.transform(data[columns])
 data['nr.employed'] = positively_skewed[:, 0]
 
 """### Feature Scaling"""
 
-data[numeric_cols] = StandardScaler().fit_transform(data[numeric_cols]) # Automatically scaling the numeric columns with Standard Scaler
-data.head() # Displaying the data to visualize the change (For example: campaign, pdays, emp.var.rate, euribor3m)
-
+data[numeric_cols] = StandardScaler().fit_transform(
+    data[numeric_cols])  # Automatically scaling the numeric columns with Standard Scaler
+data.head()  # Displaying the data to visualize the change (For example: campaign, pdays, emp.var.rate, euribor3m)
 
 """## Seperating Input/Output"""
 
-X = data.drop(["y"], axis = 1)
+X = data.drop(["y"], axis=1)
 y = data["y"]
 
 """## Model Selection
 
 ### Some Steps
 """
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import cross_val_score # Computes scores through cross-validation for model performance evaluation.
-from sklearn.model_selection import train_test_split # Splits a dataset into training and testing subsets for model assessment.
 
 # Splitting the dataset into training and testing sets.
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42) # test_size = 0.3 means 30% of the data will be allocated to the test set.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
+                                                    random_state=42)  # test_size = 0.3 means 30% of the data will be allocated to the test set.
 
 """### XGBoost"""
 
-from xgboost import XGBClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score
+
 
 model = XGBClassifier()
 
 model.fit(X_train, y_train)
 y_pred_xgb = model.predict(X_test)
 
-param_grid = {"max_depth":range(3,10) }
+param_grid = {"max_depth": range(3, 10)}
 
 grid = GridSearchCV(XGBClassifier(), param_grid, cv=5)
 grid.fit(X_train, y_train)
 
 print(grid.best_params_)
 
-
 from xgboost import XGBClassifier
 
-model = XGBClassifier(max_depth = 3)
+model = XGBClassifier(max_depth=3)
 
 model.fit(X_train, y_train)
 y_pred_xgb = model.predict(X_test)
-
-
-
 
 
 def preprocess_input(user_input):
@@ -169,7 +162,8 @@ def preprocess_input(user_input):
     # Örneğin: Label encoding, özellik mühendisliği, vb.
 
     # Seçilen kategorik sütunları label encoding yapalım
-    categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week', 'poutcome']
+    categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
+                        'poutcome']
     label_encoder = LabelEncoder()
     for col in categorical_cols:
         user_input[col] = label_encoder.fit_transform(user_input[col])
@@ -184,21 +178,24 @@ def preprocess_input(user_input):
     user_input['previous'] = negatively_skewed[:, 3]
 
     # Pozitif skewness olan sütunlarda x^2 transform yapalım
-    exp_transformer = FunctionTransformer(lambda x: x**2, validate=True)
+    exp_transformer = FunctionTransformer(lambda x: x ** 2, validate=True)
     columns_to_exp = ['nr.employed']
     positively_skewed = exp_transformer.transform(user_input[columns_to_exp])
     user_input['nr.employed'] = positively_skewed[:, 0]
 
     # Sayısal sütunları standardize edelim
-    numeric_cols = ['age', 'duration', 'campaign', 'previous', 'emp.var.rate', 'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed']
+    numeric_cols = ['age', 'duration', 'campaign', 'previous', 'emp.var.rate', 'cons.price.idx', 'cons.conf.idx',
+                    'euribor3m', 'nr.employed']
     user_input[numeric_cols] = StandardScaler().fit_transform(user_input[numeric_cols])
 
     return user_input
+
 
 def make_prediction(user_input):
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     prediction = model.predict(user_input)
     return prediction
+
 
 # Streamlit arayüzü
 st.title("Bank Marketing Tahmin")
