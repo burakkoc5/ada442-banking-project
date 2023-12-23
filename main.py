@@ -1,3 +1,4 @@
+import streamlit as st
 import numpy as np
 import pandas as pd  # To read the file
 import warnings
@@ -13,7 +14,7 @@ from sklearn.model_selection import \
 from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
-import streamlit as st
+
 
 
 # -*- coding: utf-8 -*-
