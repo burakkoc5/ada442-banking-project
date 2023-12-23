@@ -16,13 +16,8 @@ Original file is located at
 # Commented out IPython magic to ensure Python compatibility.
 import numpy as np
 import pandas as pd # To read the file
-import seaborn as sns
-import matplotlib.pyplot as plt
-# Enabling inline plotting for Matplotlib in Jupyter Notebook (To display graphs in cells)
-# %matplotlib inline
 import warnings
 warnings.filterwarnings('ignore')
-from scipy.stats import zscore # To handle outliers (In the preprocessing part)
 from sklearn.preprocessing import LabelEncoder # Label Encoding process (In the preprocessing part)
 from sklearn.preprocessing import FunctionTransformer # Transformation process (In the preprocessing part)
 from sklearn.preprocessing import StandardScaler # Feature Scaling process (In the preprocessing part)
@@ -33,7 +28,6 @@ csv_file_path ="bank-additional.csv" # Local path of the .csv file
 
 data = pd.read_csv(csv_file_path, sep=';') # Loading the data set into the "data" variable by seperating w.r.t ';'
 
-data.head() # Displaying the first 5 rows of the file to check if the file loaded without an error
 
 """## Analyzing the dataset before the preprocessing"""
 
@@ -48,36 +42,6 @@ data.isna().sum()
 
 # Checking for duplicate values
 data.duplicated().any()
-
-"""### Analyzing some of the columns' distribution (To determine if they need transformations)"""
-
-sns.histplot(x = data["nr.employed"])
-plt.title("nr.employed Distribution")
-plt.show()
-
-# We can clearly see that "nr.employed" column has positively skewed distribution. (Concentration on larger values)
-
-sns.histplot(x = data["age"])
-plt.title("age Distribution")
-plt.show()
-
-# We can clearly see that "age" column has negatively skewed distribution. (Concentration on smaller values)
-
-sns.histplot(x = data["duration"])
-plt.title("duration Distribution")
-plt.show()
-
-# We can clearly see that "duration" column has negatively skewed distribution. (Concentration on smaller values)
-
-sns.countplot(x = data["campaign"])
-plt.title("campaign Distribution")
-plt.show()
-
-# We can clearly see that "campaign" column has negatively skewed distribution. (Concentration on smaller values)
-
-sns.histplot(x = data["previous"])
-plt.title("previous Distribution")
-plt.show()
 
 # We can clearly see that "previous" column has negatively skewed distribution. (Concentration on smaller values)
 
@@ -152,13 +116,6 @@ data['nr.employed'] = positively_skewed[:, 0]
 data[numeric_cols] = StandardScaler().fit_transform(data[numeric_cols]) # Automatically scaling the numeric columns with Standard Scaler
 data.head() # Displaying the data to visualize the change (For example: campaign, pdays, emp.var.rate, euribor3m)
 
-"""## Correlation Matrix"""
-
-#İleride buradan bir çıkarım yapılmıyorsa silinebilir
-corr = data.corr()
-plt.figure(figsize=(14,7))
-sns.heatmap(corr,annot=True)
-plt.show()
 
 """## Seperating Input/Output"""
 
@@ -187,11 +144,6 @@ model = XGBClassifier()
 model.fit(X_train, y_train)
 y_pred_xgb = model.predict(X_test)
 
-print("Training score:", np.mean(cross_val_score(model, X_train, y_train)))
-print("Test score:", np.mean(cross_val_score(model, X_test, y_test)))
-print( f"Model Score: {model.score(X_test, y_test)}")
-print("\nAccuracy:", accuracy_score(y_test, y_pred_xgb))
-
 param_grid = {"max_depth":range(3,10) }
 
 grid = GridSearchCV(XGBClassifier(), param_grid, cv=5)
@@ -207,31 +159,7 @@ model = XGBClassifier(max_depth = 3)
 model.fit(X_train, y_train)
 y_pred_xgb = model.predict(X_test)
 
-print("Training score:", np.mean(cross_val_score(model, X_train, y_train)))
-print("Test score:", np.mean(cross_val_score(model, X_test, y_test)))
-print( f"Model Score: {model.score(X_test, y_test)}")
-print("\nAccuracy:", accuracy_score(y_test, y_pred_xgb))
 
-"""### Confusion Matrix"""
-
-from sklearn.metrics import confusion_matrix
-
-trueNegative, falsePositive, falseNegative, truePositive = confusion_matrix(y_test, y_pred_xgb).ravel()
-
-print("TP: " + str(truePositive))
-print("TN: " + str(trueNegative))
-print("FP: " + str(falsePositive))
-print("FN: " + str(falseNegative))
-print("")
-
-recall = truePositive / (truePositive + falseNegative) * 100
-precision = truePositive / (truePositive + falsePositive) * 100
-
-print("Recall: " + str(recall) + " %")
-print("Precision: " + str(precision) + " %")
-
-from sklearn.metrics import classification_report
-print(classification_report(y_test, y_pred_xgb))
 
 
 
