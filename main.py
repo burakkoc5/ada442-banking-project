@@ -1,10 +1,4 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.preprocessing import StandardScaler
-
 
 # -*- coding: utf-8 -*-
 """Banking_Classification (2) (1).ipynb
