@@ -279,7 +279,7 @@ def make_prediction(user_input):
     return prediction
 
 # Streamlit arayüzü
-st.title("Bank Marketing Tahmin Uygulaması")
+st.title("Bank Marketing Tahmin")
 
 # Kullanıcıdan giriş al
 age = st.slider("Yaşınızı Seçin", min_value=18, max_value=100, value=30)
