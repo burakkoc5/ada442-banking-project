@@ -4,7 +4,7 @@ import pandas as pd  # To read the file
 import warnings
 
 warnings.filterwarnings('ignore')
-from sklearn.preprocessing import LabelEncoder as le # Label Encoding process (In the preprocessing part)
+from sklearn.preprocessing import LabelEncoder# Label Encoding process (In the preprocessing part)
 from sklearn.preprocessing import FunctionTransformer  # Transformation process (In the preprocessing part)
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import \
@@ -87,7 +87,7 @@ for column in numeric_cols:
 """### Label Encoding for categorical values"""
 
 for col in categorical_cols:
-    data[col] = le.fit_transform(data[col])
+    data[col] = LabelEncoder().fit_transform(data[col])
 
 data.head()  # Printing the data to observe the change (For example, for month column, may got the value 6 and jun got the value 4)
 
@@ -165,7 +165,7 @@ def preprocess_input(user_input):
     # Seçilen kategorik sütunları label encoding yapalım
     categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
                         'poutcome']
-    label_encoder = le
+    label_encoder = LabelEncoder()
     for col in categorical_cols:
         user_input[col] = label_encoder.fit_transform(user_input[col])
 
