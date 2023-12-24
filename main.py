@@ -12,6 +12,7 @@ from sklearn.preprocessing import FunctionTransformer  # Transformation process 
 from sklearn.preprocessing import StandardScaler
 
 
+
 def preprocess_input(user_input):
     # Kullanıcıdan alınan girdiyi modelin beklentisine göre ön işleme
     # Bu kısımda, kullanıcının girdisini modele uygun formata getirin
@@ -27,6 +28,34 @@ def preprocess_input(user_input):
     # Negatif skewness olan sütunlarda log transform yapalım
     log_transformer = FunctionTransformer(np.log1p, validate=True)
     columns_to_log = ['age', 'duration', 'campaign', 'previous']
+
+    # Kontrol eklendi: duration için text_input değerini kontrol et
+    if 'duration' in columns_to_log and 'duration' in user_input:
+        duration_text_input = user_input['duration']
+        if duration_text_input:
+            user_input['duration'] = float(duration_text_input)
+        else:
+            st.error("Please enter a valid duration.")
+            st.stop()
+
+    # Kontrol eklendi: campaign için text_input değerini kontrol et
+    if 'campaign' in columns_to_log and 'campaign' in user_input:
+        campaign_text_input = user_input['campaign']
+        if campaign_text_input:
+            user_input['campaign'] = float(campaign_text_input)
+        else:
+            st.error("Please enter a valid campaign.")
+            st.stop()
+
+    # Kontrol eklendi: previous için text_input değerini kontrol et
+    if 'previous' in columns_to_log and 'previous' in user_input:
+        previous_text_input = user_input['previous']
+        if previous_text_input:
+            user_input['previous'] = float(previous_text_input)
+        else:
+            st.error("Please enter a valid previous.")
+            st.stop()
+
     negatively_skewed = log_transformer.transform(user_input[columns_to_log])
     user_input['age'] = negatively_skewed[:, 0]
     user_input['duration'] = negatively_skewed[:, 1]
@@ -46,7 +75,6 @@ def preprocess_input(user_input):
 
     return user_input
 
-
 def make_prediction(model, user_input):
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
@@ -58,23 +86,29 @@ def make_prediction(model, user_input):
         return 'No'
     else:
         return 'Yes'
-    # return model_prediction
-
 
 def button_onclick(input_model, user_data):
+    # Butona basıldığında preprocess ve prediction metotlarını çağır
     processed_data = preprocess_input(user_data)
-
     result = make_prediction(input_model, processed_data)
 
     # Display the prediction
     st.subheader("Prediction")
     st.write(result)
 
-
 if __name__ == '__main__':
     st.title("Bank Marketing Prediction App")
 
     age = st.text_input("Age", help='Select your age')
+
+    # Kullanıcı bir şey girmişse
+    if age:
+        age = float(age)
+    else:
+        # Varsayılan değeri belirleyin veya kullanıcı bir şey girmemişse bir hata mesajı gösterin
+        st.error("Please enter a valid age.")
+        st.stop()
+
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
                                "management", "student", "retired", "housemaid", "unemployed"])
     marital_status = st.selectbox("Marital Status", ["married", "single", "divorced", "unknown"])
@@ -89,6 +123,14 @@ if __name__ == '__main__':
     day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"])
 
     duration = st.text_input('Duration', help='last contact duration, in seconds (numeric)')
+
+    # Kontrol eklendi: duration için text_input değerini kontrol et
+    if duration:
+        duration = float(duration)
+    else:
+        st.error("Please enter a valid duration.")
+        st.stop()
+
     campaign = st.text_input("Campaign", help='number of contacts performed '
                                                                                         'during this campaign and for'
                                                                                         ' this client (numeric, '
@@ -130,4 +172,6 @@ if __name__ == '__main__':
     # Load the trained model
     model = joblib.load("model.pkl")
 
-    st.button('Make Prediction', on_click=button_onclick(model, input_data))
+    # Butona basılmadan preprocess ve prediction metodlarını çağırma
+    if st.button('Make Prediction'):
+        button_onclick(model, input_data)
