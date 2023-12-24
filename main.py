@@ -88,8 +88,8 @@ if __name__ == '__main__':
     month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"])
     day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"])
 
-    duration = st.text_input('Duration',help='last contact duration, in seconds (numeric)')
-    campaign = st.text_input("Campaign", min_value=0.0, max_value=35.0, value=10.0,help='number of contacts performed '
+    duration = st.text_input('Duration', help='last contact duration, in seconds (numeric)')
+    campaign = st.text_input("Campaign", help='number of contacts performed '
                                                                                         'during this campaign and for'
                                                                                         ' this client (numeric, '
                                                                                         'includes last contact)')
