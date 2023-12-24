@@ -94,7 +94,7 @@ def button_onclick(input_model, user_data):
     pdays_text_input = user_data['pdays']
     previous_text_input = user_data['previous']
 
-    if not age_text_input or not duration_text_input or not pdays_text_input or not previous_text_input:
+    if input_data[['age', 'duration', 'pdays', 'previous']].empty.any():
         st.error("Please enter valid values for age, duration, pdays, and previous.")
         st.stop()
 
