@@ -68,7 +68,7 @@ def button_onclick(model, input_data):
 
     # Display the prediction
     st.subheader("Prediction")
-    st.write(prediction)
+    st.write(result)
 
 
 if __name__ == '__main__':
@@ -87,16 +87,21 @@ if __name__ == '__main__':
     contact = st.selectbox("Contact", ["cellular", "telephone", "unknown"])
     month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"])
     day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"])
-    duration = st.slider("Duration", min_value=0.0, max_value=3643.0, value=300.0)
-    campaign = st.slider("Campaign", min_value=0.0, max_value=35.0, value=10.0)
+
+    duration = st.text_input('Duration',help='last contact duration, in seconds (numeric)')
+    campaign = st.text_input("Campaign", min_value=0.0, max_value=35.0, value=10.0,help='number of contacts performed '
+                                                                                        'during this campaign and for'
+                                                                                        ' this client (numeric, '
+                                                                                        'includes last contact)')
     pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=300.0)
     previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=2.0)
     poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"])
-    emp_var_rate = st.slider("Employment Variation Rate", min_value=-3.0, max_value=1.0, value=0.0)
-    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=94.0, value=30.0)
-    cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-50.0, max_value=0.0, value=-20.0)
-    euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=5.0, value=3.0)
-    nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=5228.0, value=2000.0)
+
+    emp_var_rate = st.slider("Employment Variation Rate", min_value=-4.0, max_value=2.0, value=0.0)
+    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=100, value=30.0)
+    cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-70.0, max_value=0.0, value=-20.0)
+    euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=8.0, value=3.0)
+    nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=6000.0, value=2000.0)
 
     # Create a dataframe with the user input
     input_data = pd.DataFrame({
