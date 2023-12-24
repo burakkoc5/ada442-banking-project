@@ -62,9 +62,11 @@ def button_onclick(input_model, user_data):
     pdays_text_input = user_data['pdays']
     previous_text_input = user_data['previous']
 
-    if input_data.isna().any().any():
-        st.error("Please enter valid values for age, duration, pdays, and previous.")
-        st.stop()
+    for column in input_data.columns:
+        for index, value in input_data[column].items():
+            if pd.isna(value) or value == '':
+                st.error("Please enter valid values for empty fields")
+                st.stop()
 
     user_data['duration'] = float(pdays_text_input)
     user_data['previous'] = float(previous_text_input)
