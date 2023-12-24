@@ -49,8 +49,6 @@ def make_prediction(model, user_input):
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
 
-    st.subheader("Processed Input Data:")
-    st.write(user_input)
     print('Model Prediction is ' + str(model_prediction))
     if model_prediction == 0:
         return 'No'
