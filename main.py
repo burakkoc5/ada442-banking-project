@@ -88,38 +88,33 @@ def button_onclick(input_model, user_data):
 if __name__ == '__main__':
     st.title("Bank Marketing Prediction App")
 
-    # Genişlik değerlerini uygun bir şekilde değiştirin
-    width = 300
-
     age = st.text_input("age", help='Age of the client')
     job = st.selectbox("job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
-                               "management", "student", "retired", "housemaid", "unemployed"], width=width,
+                               "management", "student", "retired", "housemaid", "unemployed"],
                        help='Type of job (categorical: "admin.", "blue-collar", "entrepreneur", "housemaid", "management", "retired", "self-employed", "services", "student", "technician", "unemployed")')
-    marital_status = st.selectbox("marital", ["married", "single", "divorced", "unknown"], width=width,
+    marital_status = st.selectbox("marital", ["married", "single", "divorced", "unknown"],
                                   help='Marital status (categorical: "divorced", "married", "single", "unknown")')
     education = st.selectbox("education",
                              ["basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate",
-                              "professional.course", "university.degree", "unknown"], width=width,
+                              "professional.course", "university.degree", "unknown"],
                              help='Education level (categorical: "basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate", "professional.course", "university.degree", "unknown")')
-    default = st.selectbox("default", ["no", "yes", "unknown"], width=width, help='Has credit in default?')
+    default = st.selectbox("default", ["no", "yes", "unknown"], help='Has credit in default?')
     balance = st.text_input("balance", help='Average yearly balance in euros')
-    housing = st.selectbox("housing", ["no", "yes", "unknown"], width=width, help='Has housing loan?')
-    loan = st.selectbox("loan", ["no", "yes", "unknown"], width=width, help='Has personal loan?')
-    contact = st.selectbox("contact", ["cellular", "telephone", "unknown"], width=width,
+    housing = st.selectbox("housing", ["no", "yes", "unknown"], help='Has housing loan?')
+    loan = st.selectbox("loan", ["no", "yes", "unknown"], help='Has personal loan?')
+    contact = st.selectbox("contact", ["cellular", "telephone", "unknown"],
                            help='Contact communication type (categorical: "cellular", "telephone", "unknown")')
-    day_of_week = st.selectbox("day_of_week", ["mon", "tue", "wed", "thu", "fri"], width=width,
-                               help='Last contact day of the week')
+    day_of_week = st.selectbox("day_of_week", ["mon", "tue", "wed", "thu", "fri"], help='Last contact day of the week')
     month = st.selectbox("month", ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
-                         width=width, help='Last contact month of the year')
+                         help='Last contact month of the year')
     duration = st.text_input('duration',
                              help='Last contact duration in seconds (numeric). Important note: this attribute highly affects the output target (e.g., if duration=0 then y="no"). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.')
     campaign = st.text_input("campaign",
                              help='Number of contacts performed during this campaign and for this client (numeric, includes last contact)')
     pdays = st.text_input("pdays",
                           help='Number of days that passed by after the client was last contacted from a previous campaign (numeric; -1 means client was not previously contacted)')
-    previous = st.text_input("previous",
-                             help='Number of contacts performed before this campaign and for this client')
-    poutcome = st.selectbox("poutcome", ["failure", "nonexistent", "success"], width=width,
+    previous = st.text_input("previous", help='Number of contacts performed before this campaign and for this client')
+    poutcome = st.selectbox("poutcome", ["failure", "nonexistent", "success"],
                             help='Outcome of the previous marketing campaign')
 
     emp_var_rate = st.slider("emp_var_rate", min_value=-4.0, max_value=2.0, value=0.0, help='Employment variation rate')
@@ -129,6 +124,8 @@ if __name__ == '__main__':
                               help='Consumer confidence index')
     euribor3m = st.slider("euribor3m", min_value=0.0, max_value=8.0, value=3.0, help='Euribor 3 month rate')
     nr_employed = st.slider("nr_employed", min_value=0.0, max_value=6000.0, value=2000.0, help='Number of employees')
+
+    # Diğer kodlarınızı buraya ekleyin...
 
     # Create a dataframe with the user input
     input_data = pd.DataFrame({
