@@ -79,7 +79,7 @@ def button_onclick(input_model, user_data):
 
     # Display the prediction
     st.subheader("Prediction")
-    st.write(result)
+    st.subheader(result)
 
 
 if __name__ == '__main__':
