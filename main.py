@@ -91,7 +91,7 @@ if __name__ == '__main__':
     # Genişlik değerlerini uygun bir şekilde değiştirin
     width = 300
 
-    age = st.text_input("age", width=width, help='Age of the client')
+    age = st.text_input("age", help='Age of the client')
     job = st.selectbox("job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
                                "management", "student", "retired", "housemaid", "unemployed"], width=width,
                        help='Type of job (categorical: "admin.", "blue-collar", "entrepreneur", "housemaid", "management", "retired", "self-employed", "services", "student", "technician", "unemployed")')
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                               "professional.course", "university.degree", "unknown"], width=width,
                              help='Education level (categorical: "basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate", "professional.course", "university.degree", "unknown")')
     default = st.selectbox("default", ["no", "yes", "unknown"], width=width, help='Has credit in default?')
-    balance = st.text_input("balance", width=width, help='Average yearly balance in euros')
+    balance = st.text_input("balance", help='Average yearly balance in euros')
     housing = st.selectbox("housing", ["no", "yes", "unknown"], width=width, help='Has housing loan?')
     loan = st.selectbox("loan", ["no", "yes", "unknown"], width=width, help='Has personal loan?')
     contact = st.selectbox("contact", ["cellular", "telephone", "unknown"], width=width,
@@ -111,13 +111,13 @@ if __name__ == '__main__':
                                help='Last contact day of the week')
     month = st.selectbox("month", ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
                          width=width, help='Last contact month of the year')
-    duration = st.text_input('duration', width=width,
+    duration = st.text_input('duration',
                              help='Last contact duration in seconds (numeric). Important note: this attribute highly affects the output target (e.g., if duration=0 then y="no"). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.')
-    campaign = st.text_input("campaign", width=width,
+    campaign = st.text_input("campaign",
                              help='Number of contacts performed during this campaign and for this client (numeric, includes last contact)')
-    pdays = st.text_input("pdays", width=width,
+    pdays = st.text_input("pdays",
                           help='Number of days that passed by after the client was last contacted from a previous campaign (numeric; -1 means client was not previously contacted)')
-    previous = st.text_input("previous", width=width,
+    previous = st.text_input("previous",
                              help='Number of contacts performed before this campaign and for this client')
     poutcome = st.selectbox("poutcome", ["failure", "nonexistent", "success"], width=width,
                             help='Outcome of the previous marketing campaign')
