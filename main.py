@@ -48,8 +48,6 @@ def preprocess_input(user_input):
 
 
 def make_prediction(model, user_input):
-
-
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
 
@@ -59,13 +57,13 @@ def make_prediction(model, user_input):
         return 'No'
     else:
         return 'Yes'
-    #return model_prediction
+    # return model_prediction
 
 
 if __name__ == '__main__':
-
     st.title("Bank Marketing Prediction App")
-    age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
+
+    age = st.text_input("Age", help='Select your age')
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
                                "management", "student", "retired", "housemaid", "unemployed"])
     marital_status = st.selectbox("Marital Status", ["married", "single", "divorced", "unknown"])
