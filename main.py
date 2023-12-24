@@ -79,7 +79,10 @@ def button_onclick(input_model, user_data):
 
     # Display the prediction
     st.subheader("Prediction")
-    st.write(f"<span style='font-size:24px'>{result}</span>", unsafe_allow_html=True)
+    if result == 'Yes':
+        st.write(f"<span style='font-size:20px; color:green'>{result}</span>", unsafe_allow_html=True)
+    else:
+        st.write(f"<span style='font-size:20px; color:red'>{result}</span>", unsafe_allow_html=True)
 
 
 if __name__ == '__main__':
