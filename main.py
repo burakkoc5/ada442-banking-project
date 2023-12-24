@@ -12,7 +12,6 @@ from sklearn.preprocessing import FunctionTransformer  # Transformation process 
 from sklearn.preprocessing import StandardScaler
 
 
-
 def preprocess_input(user_input):
     # Kullanıcıdan alınan girdiyi modelin beklentisine göre ön işleme
     # Bu kısımda, kullanıcının girdisini modele uygun formata getirin
@@ -75,6 +74,7 @@ def preprocess_input(user_input):
 
     return user_input
 
+
 def make_prediction(model, user_input):
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
@@ -87,7 +87,22 @@ def make_prediction(model, user_input):
     else:
         return 'Yes'
 
+
 def button_onclick(input_model, user_data):
+    age_text_input = user_data['age']
+    duration_text_input = user_data['duration']
+    pdays_text_input = user_data['pdays']
+    previous_text_input = user_data['previous']
+
+    if not age_text_input or not duration_text_input or not pdays_text_input or not previous_text_input:
+        st.error("Please enter valid values for age, duration, pdays, and previous.")
+        st.stop()
+
+    user_data['duration'] = float(pdays_text_input)
+    user_data['previous'] = float(previous_text_input)
+    user_data['age'] = float(age_text_input)
+    user_data['duration'] = float(duration_text_input)
+
     # Butona basıldığında preprocess ve prediction metotlarını çağır
     processed_data = preprocess_input(user_data)
     result = make_prediction(input_model, processed_data)
@@ -96,18 +111,11 @@ def button_onclick(input_model, user_data):
     st.subheader("Prediction")
     st.write(result)
 
+
 if __name__ == '__main__':
     st.title("Bank Marketing Prediction App")
 
     age = st.text_input("Age", help='Select your age')
-
-    # Kullanıcı bir şey girmişse
-    if age:
-        age = float(age)
-    else:
-        # Varsayılan değeri belirleyin veya kullanıcı bir şey girmemişse bir hata mesajı gösterin
-        st.error("Please enter a valid age.")
-        st.stop()
 
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
                                "management", "student", "retired", "housemaid", "unemployed"])
@@ -123,18 +131,10 @@ if __name__ == '__main__':
     day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"])
 
     duration = st.text_input('Duration', help='last contact duration, in seconds (numeric)')
-
-    # Kontrol eklendi: duration için text_input değerini kontrol et
-    if duration:
-        duration = float(duration)
-    else:
-        st.error("Please enter a valid duration.")
-        st.stop()
-
     campaign = st.text_input("Campaign", help='number of contacts performed '
-                                                                                        'during this campaign and for'
-                                                                                        ' this client (numeric, '
-                                                                                        'includes last contact)')
+                                              'during this campaign and for'
+                                              ' this client (numeric, '
+                                              'includes last contact)')
     pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=300.0)
     previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=2.0)
     poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"])
