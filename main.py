@@ -86,44 +86,38 @@ def button_onclick(input_model, user_data):
 
 
 if __name__ == '__main__':
-    st.title("Bank Marketing Prediction App")
 
-    age = st.text_input("age", help='Age of the client')
-    job = st.selectbox("job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
-                               "management", "student", "retired", "housemaid", "unemployed"],
-                       help='Type of job (categorical: "admin.", "blue-collar", "entrepreneur", "housemaid", "management", "retired", "self-employed", "services", "student", "technician", "unemployed")')
-    marital_status = st.selectbox("marital", ["married", "single", "divorced", "unknown"],
-                                  help='Marital status (categorical: "divorced", "married", "single", "unknown")')
-    education = st.selectbox("education",
-                             ["basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate",
-                              "professional.course", "university.degree", "unknown"],
-                             help='Education level (categorical: "basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate", "professional.course", "university.degree", "unknown")')
-    default = st.selectbox("default", ["no", "yes", "unknown"], help='Has credit in default?')
-    balance = st.text_input("balance", help='Average yearly balance in euros')
-    housing = st.selectbox("housing", ["no", "yes", "unknown"], help='Has housing loan?')
-    loan = st.selectbox("loan", ["no", "yes", "unknown"], help='Has personal loan?')
-    contact = st.selectbox("contact", ["cellular", "telephone", "unknown"],
-                           help='Contact communication type (categorical: "cellular", "telephone", "unknown")')
-    day_of_week = st.selectbox("day_of_week", ["mon", "tue", "wed", "thu", "fri"], help='Last contact day of the week')
-    month = st.selectbox("month", ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
-                         help='Last contact month of the year')
-    duration = st.text_input('duration',
-                             help='Last contact duration in seconds (numeric). Important note: this attribute highly affects the output target (e.g., if duration=0 then y="no"). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.')
-    campaign = st.text_input("campaign",
-                             help='Number of contacts performed during this campaign and for this client (numeric, includes last contact)')
-    pdays = st.text_input("pdays",
-                          help='Number of days that passed by after the client was last contacted from a previous campaign (numeric; -1 means client was not previously contacted)')
-    previous = st.text_input("previous", help='Number of contacts performed before this campaign and for this client')
-    poutcome = st.selectbox("poutcome", ["failure", "nonexistent", "success"],
+    age = st.text_input("Age", help='Select your age')
+    job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
+                               "management", "student", "retired", "housemaid", "unemployed"], help='type of job')
+    marital_status = st.selectbox("Marital Status", ["married", "single", "divorced", "unknown"], help='marital status ')
+    education = st.selectbox("Education",
+                             ["basic.9y", "high.school", "university.degree", "professional.course", "basic.6y",
+                              "basic.4y", "illiterate", "unknown"], help='education level')
+    default = st.selectbox("Default", ["no", "yes", "unknown"], help='has credit in default?	')
+    housing = st.selectbox("Housing", ["no", "yes", "unknown"], help='has housing loan?	')
+    loan = st.selectbox("Loan", ["no", "yes", "unknown"], help='has personal loan?')
+    contact = st.selectbox("Contact", ["cellular", "telephone", "unknown"], help='education level')
+    month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"], help='last '
+                                                                                                               'contact month of year')
+    day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"], help='last contact day of the week	')
+    duration = st.text_input('Duration', help='last contact duration, in seconds (numeric)')
+    campaign = st.text_input("Campaign", help='number of contacts performed '
+                                              'during this campaign and for'
+                                              ' this client (numeric, '
+                                              'includes last contact)')
+    pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=300.0,
+                          help='Number of days that passed by after the client was last contacted from a previous campaign')
+    previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=2.0, help='Number of contacts performed before this campaign and for this client')
+    poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"],
                             help='Outcome of the previous marketing campaign')
-
-    emp_var_rate = st.slider("emp_var_rate", min_value=-4.0, max_value=2.0, value=0.0, help='Employment variation rate')
-    cons_price_idx = st.slider("cons_price_idx", min_value=0.0, max_value=100.0, value=30.0,
+    emp_var_rate = st.slider("Employment Variation Rate", min_value=-4.0, max_value=2.0, value=0.0, help='Employment variation rate')
+    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=100.0, value=30.0,
                                help='Consumer price index')
-    cons_conf_idx = st.slider("cons_conf_idx", min_value=-70.0, max_value=0.0, value=-20.0,
+    cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-70.0, max_value=0.0, value=-20.0,
                               help='Consumer confidence index')
-    euribor3m = st.slider("euribor3m", min_value=0.0, max_value=8.0, value=3.0, help='Euribor 3 month rate')
-    nr_employed = st.slider("nr_employed", min_value=0.0, max_value=6000.0, value=2000.0, help='Number of employees')
+    euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=8.0, value=3.0, help='Euribor 3 month rate')
+    nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=6000.0, value=2000.0, help='Number of employees')
 
 
     # Create a dataframe with the user input
