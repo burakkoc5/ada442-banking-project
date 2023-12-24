@@ -48,7 +48,7 @@ def preprocess_input(user_input):
 
 
 def make_prediction(user_input):
-    model = joblib.load("trained_model.pkl")
+    model = joblib.load("model.pkl")
 
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     prediction = model.predict(user_input)
