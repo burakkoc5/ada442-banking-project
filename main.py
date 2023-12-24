@@ -1,14 +1,16 @@
 import pickle
 
+import joblib
 import streamlit as st
 import numpy as np
 import pandas as pd  # To read the file
 import warnings
 
 warnings.filterwarnings('ignore')
-from sklearn.preprocessing import LabelEncoder# Label Encoding process (In the preprocessing part)
+from sklearn.preprocessing import LabelEncoder  # Label Encoding process (In the preprocessing part)
 from sklearn.preprocessing import FunctionTransformer  # Transformation process (In the preprocessing part)
 from sklearn.preprocessing import StandardScaler
+
 
 def preprocess_input(user_input):
     # Kullanıcıdan alınan girdiyi modelin beklentisine göre ön işleme
@@ -46,16 +48,18 @@ def preprocess_input(user_input):
 
 
 def make_prediction(user_input):
-    pickled_model = pickle.load(open('model.pkl', 'rb'))
+    model = joblib.load("trained_model.pkl")
 
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
-    prediction = pickled_model.predict(user_input)
+    prediction = model.predict(user_input)
     return prediction
 
+
 if __name__ == '__main__':
+
     st.title("Bank Marketing Prediction App")
-    job = st.selectbox("Job",["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
-         "management", "student", "retired", "housemaid", "unemployed"])
+    job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
+                               "management", "student", "retired", "housemaid", "unemployed"])
     marital_status = st.selectbox("Marital Status", ["married", "single", "divorced", "unknown"])
     education = st.selectbox("Education",
                              ["basic.9y", "high.school", "university.degree", "professional.course", "basic.6y",
@@ -65,18 +69,18 @@ if __name__ == '__main__':
     loan = st.selectbox("Loan", ["no", "yes", "unknown"])
     contact = st.selectbox("Contact", ["cellular", "telephone", "unknown"])
     month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"])
-    day_of_week = st.selectbox("Day of week", ["fri","wed","mon","thu","tue"])
+    day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"])
     age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
     duration = st.slider("Duration", min_value=0.0, max_value=3643.0, value=300.0)
     campaign = st.slider("Campaign", min_value=0.0, max_value=35.0, value=10.0)
-    pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=15.0)
-    previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=5.0)
+    pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=300.0)
+    previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=2.0)
     poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"])
     emp_var_rate = st.slider("Employment Variation Rate", min_value=-3.0, max_value=1.0, value=0.0)
-    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=94.0, value=35.0)
-    cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-50.0, max_value=0.0, value=-35.0)
+    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=94.0, value=30.0)
+    cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-50.0, max_value=0.0, value=-20.0)
     euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=5.0, value=3.0)
-    nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=5228.0, value=5000.0)
+    nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=5228.0, value=2000.0)
 
     # Create a dataframe with the user input
     input_data = pd.DataFrame({
