@@ -43,4 +43,3 @@ This project was developed as part of the ADA442 course at TED University.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-```
