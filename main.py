@@ -51,13 +51,24 @@ def make_prediction(model, user_input):
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
 
-    st.write("Processed Input Data:")
+    st.subheader("Processed Input Data:")
     st.write(user_input)
+    print(model_prediction)
     if model_prediction == 0:
         return 'No'
     else:
         return 'Yes'
     # return model_prediction
+
+
+def button_onclick(model, input_data):
+    processed_data = preprocess_input(input_data)
+
+    result = make_prediction(model, processed_data)
+
+    # Display the prediction
+    st.subheader("Prediction")
+    st.write(prediction)
 
 
 if __name__ == '__main__':
@@ -111,19 +122,7 @@ if __name__ == '__main__':
         'nr.employed': [nr_employed],
     })
 
-    # Preprocess the input data
-    input_data = preprocess_input(input_data)
-
-    # Display the preprocessed input data
-    st.subheader("Preprocessed Input Data")
-    st.write(input_data)
-
     # Load the trained model
     model = joblib.load("model.pkl")
 
-    # Make predictions
-    prediction = make_prediction(model, input_data)
-
-    # Display the prediction
-    st.subheader("Prediction")
-    st.write(prediction)
+    st.button('Make Prediction', on_click=button_onclick(model, input_data))
