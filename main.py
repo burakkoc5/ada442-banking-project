@@ -1,3 +1,5 @@
+import pickle
+
 import streamlit as st
 import numpy as np
 import pandas as pd  # To read the file
@@ -7,110 +9,6 @@ warnings.filterwarnings('ignore')
 from sklearn.preprocessing import LabelEncoder# Label Encoding process (In the preprocessing part)
 from sklearn.preprocessing import FunctionTransformer  # Transformation process (In the preprocessing part)
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import \
-    cross_val_score  # Computes scores through cross-validation for model performance evaluation.
-from sklearn.model_selection import \
-    train_test_split  # Splits a dataset into training and testing subsets for model assessment.
-from xgboost import XGBClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score
-
-
-
-
-csv_file_path = "bank-additional.csv"  # Local path of the .csv file
-
-data = pd.read_csv(csv_file_path, sep=';')  # Loading the data set into the "data" variable by seperating w.r.t ';'
-
-
-# Finding unique values for each column and storing in the variable "unique_values"
-unique_values = data.nunique()
-
-
-
-categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
-                    'poutcome', "y"]
-numeric_cols = [col for col in data.columns if col not in categorical_cols]
-
-print("Categorical Columns: " + str(categorical_cols))
-print("\nNumeric Columns: " + str(numeric_cols))
-
-
-### !!!!!
-numeric_cols.remove("previous")  # Causes error on correlation matrix?
-
-for column in numeric_cols:
-    # Calculating quartiles and interquartile range
-    Q1 = data[column].quantile(0.25)
-    Q3 = data[column].quantile(0.75)
-    IQR = Q3 - Q1
-
-    upper_limit = Q3 + 1.5 * IQR  # Determining the upper limit
-
-    data.loc[data[column] > upper_limit, column] = upper_limit  # Replace outliers with the upper limit
-
-
-for col in categorical_cols:
-    data[col] = LabelEncoder().fit_transform(data[col])
-
-data.head()  # Printing the data to observe the change (For example, for month column, may got the value 6 and jun got the value 4)
-
-logarithm_transformer = FunctionTransformer(np.log1p,
-                                            validate=True)  # Log transform instance from the Function Transformer
-exp_transformer = FunctionTransformer(lambda x: x ** 2,
-                                      validate=True)  # x² transform instance from the Function Transformer (Manually)
-
-# Applying log transforms for the negatively skewed columns.
-columns = ['age', 'duration', 'campaign', 'previous']  # Determined by analyzing the distributions of the columns
-
-negatively_skewed = logarithm_transformer.transform(data[columns])
-data['age'] = negatively_skewed[:, 0]
-data['duration'] = negatively_skewed[:, 1]
-data['campaign'] = negatively_skewed[:, 2]
-data['previous'] = negatively_skewed[:, 3]
-
-# Applying x² transforms for the negatively skewed columns.
-columns = ['nr.employed']  # Determined by analyzing the distributions of the columns
-
-positively_skewed = exp_transformer.transform(data[columns])
-data['nr.employed'] = positively_skewed[:, 0]
-
-
-data[numeric_cols] = StandardScaler().fit_transform(
-    data[numeric_cols])  # Automatically scaling the numeric columns with Standard Scaler
-data.head()  # Displaying the data to visualize the change (For example: campaign, pdays, emp.var.rate, euribor3m)
-
-
-X = data.drop(["y"], axis=1)
-y = data["y"]
-
-
-
-# Splitting the dataset into training and testing sets.
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
-                                                    random_state=42)  # test_size = 0.3 means 30% of the data will be allocated to the test set.
-
-
-
-model = XGBClassifier()
-
-model.fit(X_train, y_train)
-y_pred_xgb = model.predict(X_test)
-
-param_grid = {"max_depth": range(3, 10)}
-
-grid = GridSearchCV(XGBClassifier(), param_grid, cv=5)
-grid.fit(X_train, y_train)
-
-print(grid.best_params_)
-
-from xgboost import XGBClassifier
-
-model = XGBClassifier(max_depth=3)
-
-model.fit(X_train, y_train)
-y_pred_xgb = model.predict(X_test)
-
 
 def preprocess_input(user_input):
     # Kullanıcıdan alınan girdiyi modelin beklentisine göre ön işleme
@@ -148,31 +46,74 @@ def preprocess_input(user_input):
 
 
 def make_prediction(user_input):
+    pickled_model = pickle.load(open('model.pkl', 'rb'))
+
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
-    prediction = model.predict(user_input)
+    prediction = pickled_model.predict(user_input)
     return prediction
 
+if __name__ == '__main__':
+    st.title("Bank Marketing Prediction App")
+    job = st.selectbox("Job",["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
+         "management", "student", "retired", "housemaid", "unemployed"])
+    marital_status = st.selectbox("Marital Status", ["married", "single", "divorced", "unknown"])
+    education = st.selectbox("Education",
+                             ["basic.9y", "high.school", "university.degree", "professional.course", "basic.6y",
+                              "basic.4y", "illiterate", "unknown"])
+    default = st.selectbox("Default", ["no", "yes", "unknown"])
+    housing = st.selectbox("Housing", ["no", "yes", "unknown"])
+    loan = st.selectbox("Loan", ["no", "yes", "unknown"])
+    contact = st.selectbox("Contact", ["cellular", "telephone", "unknown"])
+    month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"])
+    day_of_week = st.selectbox("Day of week", ["fri","wed","mon","thu","tue"])
+    #age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
+    duration = st.slider("Duration", min_value=0.0, max_value=3643.0, value=300.0)
+    campaign = st.slider("Campaign", min_value=0.0, max_value=35.0, value=10.0)
+    pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=15.0)
+    previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=5.0)
+    poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"])
+    emp_var_rate = st.slider("Employment Variation Rate", min_value=-3.0, max_value=1.0, value=0.0)
+    #cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=94.0, value=35.0)
+    cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-50.0, max_value=0.0, value=-35.0)
+    euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=5.0, value=3.0)
+    #nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=5228.0, value=5000.0)
 
-# Streamlit arayüzü
-st.title("Bank Marketing Tahmin")
-
-# Kullanıcıdan giriş al
-age = st.slider("Yaşınızı Seçin", min_value=18, max_value=100, value=30)
-# Diğer girişleri de ekleyebilirsiniz
-
-# Kullanıcının tahmin yapmak için butona tıklamasını sağlayın
-if st.button("Tahmin Yap"):
-    # Kullanıcının girdisini modele uygun formata getirin
-    user_input = pd.DataFrame({
-        'age': [age],  # Diğer girdileri de ekleyin
-        # 'feature_name': [feature_value],
+    # Create a dataframe with the user input
+    input_data = pd.DataFrame({
+        #'age': [age],
+        'job': [job],
+        'marital': [marital_status],
+        'education': [education],
+        'default': [default],
+        'housing': [housing],
+        'loan': [loan],
+        'contact': [contact],
+        'month': [month],
+        'day_of_week': [day_of_week],
+        'duration': [duration],
+        'campaign': [campaign],
+        'pdays': [pdays],
+        'previous': [previous],
+        'poutcome': [poutcome],
+        'emp.var.rate': [emp_var_rate],
+        #'cons.price.idx': [cons_price_idx],
+        'cons.conf.idx': [cons_conf_idx],
+        'euribor3m': [euribor3m],
+        #'nr.employed': [nr_employed],
     })
 
-    # Ön işleme adımlarını uygula
-    user_input = preprocess_input(user_input)
+    # Preprocess the input data
+    input_data = preprocess_input(input_data)
 
-    # Tahmin yap
-    prediction = make_prediction(user_input)
+    # Display the preprocessed input data
+    st.subheader("Preprocessed Input Data")
+    st.write(input_data)
 
-    # Tahmin sonucunu göster
-    st.success(f"Tahmininiz: {prediction}")
+    # Load the trained model
+
+    # Make predictions
+    prediction = make_prediction(input_data)
+
+    # Display the prediction
+    st.subheader("Prediction")
+    st.write(prediction)
