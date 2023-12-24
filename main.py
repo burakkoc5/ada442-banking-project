@@ -13,11 +13,6 @@ from sklearn.preprocessing import StandardScaler
 
 
 def preprocess_input(user_input):
-    # Kullanıcıdan alınan girdiyi modelin beklentisine göre ön işleme
-    # Bu kısımda, kullanıcının girdisini modele uygun formata getirin
-    # Örneğin: Label encoding, özellik mühendisliği, vb.
-
-    # Seçilen kategorik sütunları label encoding yapalım
     categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
                         'poutcome']
     label_encoder = LabelEncoder()

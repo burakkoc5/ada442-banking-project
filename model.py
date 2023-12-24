@@ -14,6 +14,7 @@ from sklearn.model_selection import \
 from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
+from imblearn.over_sampling import SMOTE
 
 
 csv_file_path = "bank-additional.csv"  # Local path of the .csv file
@@ -85,9 +86,13 @@ y = data["y"]
 
 
 # Splitting the dataset into training and testing sets.
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3,
+X_trainv1, X_test, y_trainv1, y_test = train_test_split(X, y, test_size=0.3,
                                                     random_state=42)  # test_size = 0.3 means 30% of the data will be allocated to the test set.
-
+# Handling the imbalance in the dataset by oversampling the "yes" samples using SMOTE.
+# When there are fewer "yes" samples, the model tends to predict the result as "no" more often,
+# resulting in a lower recall rate. SMOTE increases the number of "yes" samples to improve the recall rate.
+smote = SMOTE(random_state=42)
+X_train, y_train = smote.fit_resample(X_trainv1, y_trainv1)
 
 
 model = XGBClassifier()
