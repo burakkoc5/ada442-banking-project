@@ -31,7 +31,7 @@ def preprocess_input(user_input):
     # Kontrol eklendi: duration için text_input değerini kontrol et
     if 'duration' in columns_to_log and 'duration' in user_input:
         duration_text_input = user_input['duration']
-        if duration_text_input:
+        if duration_text_input is not None and duration_text_input.strip() != '':
             user_input['duration'] = float(duration_text_input)
         else:
             st.error("Please enter a valid duration.")
