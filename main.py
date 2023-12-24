@@ -98,7 +98,7 @@ if __name__ == '__main__':
     poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"])
 
     emp_var_rate = st.slider("Employment Variation Rate", min_value=-4.0, max_value=2.0, value=0.0)
-    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=100, value=30.0)
+    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=100.0, value=30.0)
     cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-70.0, max_value=0.0, value=-20.0)
     euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=8.0, value=3.0)
     nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=6000.0, value=2000.0)
