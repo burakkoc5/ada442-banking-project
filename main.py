@@ -27,34 +27,6 @@ def preprocess_input(user_input):
     # Negatif skewness olan sütunlarda log transform yapalım
     log_transformer = FunctionTransformer(np.log1p, validate=True)
     columns_to_log = ['age', 'duration', 'campaign', 'previous']
-
-    # Kontrol eklendi: duration için text_input değerini kontrol et
-    if 'duration' in columns_to_log and 'duration' in user_input:
-        duration_text_input = user_input['duration']
-        if duration_text_input is not None and duration_text_input.strip() != '':
-            user_input['duration'] = float(duration_text_input)
-        else:
-            st.error("Please enter a valid duration.")
-            st.stop()
-
-    # Kontrol eklendi: campaign için text_input değerini kontrol et
-    if 'campaign' in columns_to_log and 'campaign' in user_input:
-        campaign_text_input = user_input['campaign']
-        if campaign_text_input:
-            user_input['campaign'] = float(campaign_text_input)
-        else:
-            st.error("Please enter a valid campaign.")
-            st.stop()
-
-    # Kontrol eklendi: previous için text_input değerini kontrol et
-    if 'previous' in columns_to_log and 'previous' in user_input:
-        previous_text_input = user_input['previous']
-        if previous_text_input:
-            user_input['previous'] = float(previous_text_input)
-        else:
-            st.error("Please enter a valid previous.")
-            st.stop()
-
     negatively_skewed = log_transformer.transform(user_input[columns_to_log])
     user_input['age'] = negatively_skewed[:, 0]
     user_input['duration'] = negatively_skewed[:, 1]
@@ -73,8 +45,6 @@ def preprocess_input(user_input):
     user_input[numeric_cols] = StandardScaler().fit_transform(user_input[numeric_cols])
 
     return user_input
-
-
 def make_prediction(model, user_input):
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
@@ -94,7 +64,7 @@ def button_onclick(input_model, user_data):
     pdays_text_input = user_data['pdays']
     previous_text_input = user_data['previous']
 
-    if input_data[['age', 'duration', 'pdays', 'previous']].isna().any().any():
+    if input_data.isna().any().any():
         st.error("Please enter valid values for age, duration, pdays, and previous.")
         st.stop()
 
