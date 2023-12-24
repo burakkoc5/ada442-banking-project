@@ -109,7 +109,7 @@ print(grid.best_params_)
 
 from xgboost import XGBClassifier
 
-model = XGBClassifier(max_depth=8)
+model = XGBClassifier(max_depth=7)
 
 model.fit(X_train, y_train)
 y_pred_xgb = model.predict(X_test)
