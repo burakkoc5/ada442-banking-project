@@ -51,7 +51,7 @@ def make_prediction(model, user_input):
 
     st.subheader("Processed Input Data:")
     st.write(user_input)
-    print('Model Prediction is ' + model_prediction)
+    print('Model Prediction is ' + str(model_prediction))
     if model_prediction == 0:
         return 'No'
     else:
