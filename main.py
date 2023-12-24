@@ -51,8 +51,11 @@ def make_prediction(user_input):
     model = joblib.load("model.pkl")
 
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
-    prediction = model.predict(user_input)
-    return prediction
+    model_prediction = model.predict(user_input)
+
+    st.write("Processed Input Data:")
+    st.write(user_input)
+    return model_prediction
 
 
 if __name__ == '__main__':
