@@ -53,7 +53,7 @@ def make_prediction(model, user_input):
 
     st.subheader("Processed Input Data:")
     st.write(user_input)
-    print(model_prediction)
+    print('Model Prediction is ' + model_prediction)
     if model_prediction == 0:
         return 'No'
     else:
@@ -61,10 +61,10 @@ def make_prediction(model, user_input):
     # return model_prediction
 
 
-def button_onclick(model, input_data):
-    processed_data = preprocess_input(input_data)
+def button_onclick(input_model, user_data):
+    processed_data = preprocess_input(user_data)
 
-    result = make_prediction(model, processed_data)
+    result = make_prediction(input_model, processed_data)
 
     # Display the prediction
     st.subheader("Prediction")
