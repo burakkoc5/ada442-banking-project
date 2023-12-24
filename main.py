@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
     # Create a dataframe with the user input
     input_data = pd.DataFrame({
-        #'age': [age],
+        'age': [age],
         'job': [job],
         'marital': [marital_status],
         'education': [education],
