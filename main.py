@@ -66,17 +66,17 @@ if __name__ == '__main__':
     contact = st.selectbox("Contact", ["cellular", "telephone", "unknown"])
     month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"])
     day_of_week = st.selectbox("Day of week", ["fri","wed","mon","thu","tue"])
-    #age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
+    age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
     duration = st.slider("Duration", min_value=0.0, max_value=3643.0, value=300.0)
     campaign = st.slider("Campaign", min_value=0.0, max_value=35.0, value=10.0)
     pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=15.0)
     previous = st.slider("Previous", min_value=0.0, max_value=6.0, value=5.0)
     poutcome = st.selectbox("Poutcome", ["nonexistent", "failure", "success"])
     emp_var_rate = st.slider("Employment Variation Rate", min_value=-3.0, max_value=1.0, value=0.0)
-    #cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=94.0, value=35.0)
+    cons_price_idx = st.slider("Consumer Price Index", min_value=0.0, max_value=94.0, value=35.0)
     cons_conf_idx = st.slider("Consumer Confidence Index", min_value=-50.0, max_value=0.0, value=-35.0)
     euribor3m = st.slider("Euribor 3 Month Rate", min_value=0.0, max_value=5.0, value=3.0)
-    #nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=5228.0, value=5000.0)
+    nr_employed = st.slider("Number of Employees", min_value=0.0, max_value=5228.0, value=5000.0)
 
     # Create a dataframe with the user input
     input_data = pd.DataFrame({
@@ -96,10 +96,10 @@ if __name__ == '__main__':
         'previous': [previous],
         'poutcome': [poutcome],
         'emp.var.rate': [emp_var_rate],
-        #'cons.price.idx': [cons_price_idx],
+        'cons.price.idx': [cons_price_idx],
         'cons.conf.idx': [cons_conf_idx],
         'euribor3m': [euribor3m],
-        #'nr.employed': [nr_employed],
+        'nr.employed': [nr_employed],
     })
 
     # Preprocess the input data
