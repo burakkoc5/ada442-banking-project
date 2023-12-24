@@ -125,7 +125,6 @@ if __name__ == '__main__':
     euribor3m = st.slider("euribor3m", min_value=0.0, max_value=8.0, value=3.0, help='Euribor 3 month rate')
     nr_employed = st.slider("nr_employed", min_value=0.0, max_value=6000.0, value=2000.0, help='Number of employees')
 
-    # Diğer kodlarınızı buraya ekleyin...
 
     # Create a dataframe with the user input
     input_data = pd.DataFrame({
