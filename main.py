@@ -47,20 +47,25 @@ def preprocess_input(user_input):
     return user_input
 
 
-def make_prediction(user_input):
-    model = joblib.load("model.pkl")
+def make_prediction(model, user_input):
+
 
     # Tahmin yapmak için modeli ve kullanıcı girdisini kullanın
     model_prediction = model.predict(user_input)
 
     st.write("Processed Input Data:")
     st.write(user_input)
-    return model_prediction
+    if model_prediction == 0:
+        return 'No'
+    else:
+        return 'Yes'
+    #return model_prediction
 
 
 if __name__ == '__main__':
 
     st.title("Bank Marketing Prediction App")
+    age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
                                "management", "student", "retired", "housemaid", "unemployed"])
     marital_status = st.selectbox("Marital Status", ["married", "single", "divorced", "unknown"])
@@ -73,7 +78,6 @@ if __name__ == '__main__':
     contact = st.selectbox("Contact", ["cellular", "telephone", "unknown"])
     month = st.selectbox("Month", ["may", "jun", "nov", "sep", "jul", "aug", "mar", "oct", "apr", "dec"])
     day_of_week = st.selectbox("Day of week", ["fri", "wed", "mon", "thu", "tue"])
-    age = st.slider("Age", min_value=0.0, max_value=88.0, value=25.0)
     duration = st.slider("Duration", min_value=0.0, max_value=3643.0, value=300.0)
     campaign = st.slider("Campaign", min_value=0.0, max_value=35.0, value=10.0)
     pdays = st.slider("Pdays", min_value=0.0, max_value=999.0, value=300.0)
@@ -117,9 +121,10 @@ if __name__ == '__main__':
     st.write(input_data)
 
     # Load the trained model
+    model = joblib.load("model.pkl")
 
     # Make predictions
-    prediction = make_prediction(input_data)
+    prediction = make_prediction(model, input_data)
 
     # Display the prediction
     st.subheader("Prediction")
