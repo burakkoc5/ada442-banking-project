@@ -94,7 +94,7 @@ def button_onclick(input_model, user_data):
     pdays_text_input = user_data['pdays']
     previous_text_input = user_data['previous']
 
-    if input_data[['age', 'duration', 'pdays', 'previous']].empty.any():
+    if input_data[['age', 'duration', 'pdays', 'previous']].isna().any().any():
         st.error("Please enter valid values for age, duration, pdays, and previous.")
         st.stop()
 
