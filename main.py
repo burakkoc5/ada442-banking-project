@@ -11,6 +11,7 @@ from sklearn.preprocessing import LabelEncoder  # Label Encoding process (In the
 from sklearn.preprocessing import FunctionTransformer  # Transformation process (In the preprocessing part)
 from sklearn.preprocessing import StandardScaler
 
+isfirstrun = True
 
 def preprocess_input(user_input):
     categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
@@ -82,7 +83,6 @@ def button_onclick(input_model, user_data):
 
 if __name__ == '__main__':
 
-    isfirstrun = True
 
     age = st.text_input("Age", help='Select your age')
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
