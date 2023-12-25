@@ -71,13 +71,7 @@ def button_onclick(input_model, user_data):
     # Butona basıldığında preprocess ve prediction metotlarını çağır
     processed_data = preprocess_input(user_data)
     result = make_prediction(input_model, processed_data)
-
-    # Display the prediction
-    st.subheader("Prediction")
-    if result == 'Yes':
-        st.write(f"<span style='font-size:20px; color:green'>{'Yes'}</span>", unsafe_allow_html=True)
-    else:
-        st.write(f"<span style='font-size:20px; color:red'>{'No'}</span>", unsafe_allow_html=True)
+    return result
 
 
 if __name__ == '__main__':
