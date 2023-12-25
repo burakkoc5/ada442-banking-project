@@ -71,12 +71,16 @@ def button_onclick(input_model, user_data):
     # Butona basıldığında preprocess ve prediction metotlarını çağır
     processed_data = preprocess_input(user_data)
     result = make_prediction(input_model, processed_data)
-    return result
+
+    # Display the prediction
+    st.subheader("Prediction")
+    if result == 'Yes':
+        st.write(f"<span style='font-size:20px; color:green'>{'Yes'}</span>", unsafe_allow_html=True)
+    else:
+        st.write(f"<span style='font-size:20px; color:red'>{'No'}</span>", unsafe_allow_html=True)
 
 
 if __name__ == '__main__':
-    isfirstrun = True
-
 
     age = st.text_input("Age", help='Select your age')
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
@@ -140,14 +144,4 @@ if __name__ == '__main__':
 
     # Butona basılmadan preprocess ve prediction metodlarını çağırma
     if st.button('Make Prediction'):
-        # Set isfirstrun to False after the first run
-        isfirstrun = False
-        result = button_onclick(model, input_data)  # Capture the result
-
-    # Display the prediction only when the button is clicked and isfirstrun is True
-    if not isfirstrun:
-        st.subheader("Prediction")
-        if result == 0:  # Assuming 0 corresponds to 'No' class in your model
-            st.write(f"<span style='font-size:20px; color:red'>{'No'}</span>", unsafe_allow_html=True)
-        else:
-            st.write(f"<span style='font-size:20px; color:green'>{'Yes'}</span>", unsafe_allow_html=True)
+        button_onclick(model, input_data)
