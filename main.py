@@ -11,7 +11,6 @@ from sklearn.preprocessing import LabelEncoder  # Label Encoding process (In the
 from sklearn.preprocessing import FunctionTransformer  # Transformation process (In the preprocessing part)
 from sklearn.preprocessing import StandardScaler
 
-isfirstrun = True
 
 def preprocess_input(user_input):
     categorical_cols = ['job', 'marital', 'education', 'default', 'contact', 'housing', 'loan', 'month', 'day_of_week',
@@ -82,6 +81,7 @@ def button_onclick(input_model, user_data):
 
 
 if __name__ == '__main__':
+    isfirstrun = True
 
 
     age = st.text_input("Age", help='Select your age')
@@ -144,12 +144,16 @@ if __name__ == '__main__':
     # Load the trained model
     model = joblib.load("model.pkl")
 
+    # Butona basılmadan preprocess ve prediction metodlarını çağırma
     if st.button('Make Prediction'):
         # Set isfirstrun to False after the first run
+        isfirstrun = False
+        result = button_onclick(model, input_data)  # Capture the result
 
-        if isfirstrun:
-            st.subheader("Prediction")
-            st.write(f"<span style='font-size:20px; color:green'>{'Yes'}</span>", unsafe_allow_html=True)
-            isfirstrun = False;
+    # Display the prediction only when the button is clicked and isfirstrun is True
+    if not isfirstrun:
+        st.subheader("Prediction")
+        if result == 0:  # Assuming 0 corresponds to 'No' class in your model
+            st.write(f"<span style='font-size:20px; color:red'>{'No'}</span>", unsafe_allow_html=True)
         else:
-            button_onclick(model, input_data)
+            st.write(f"<span style='font-size:20px; color:green'>{'Yes'}</span>", unsafe_allow_html=True)
