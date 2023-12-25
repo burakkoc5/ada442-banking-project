@@ -82,6 +82,8 @@ def button_onclick(input_model, user_data):
 
 if __name__ == '__main__':
 
+    isfirstrun = True
+
     age = st.text_input("Age", help='Select your age')
     job = st.selectbox("Job", ["blue-collar", "services", "admin.", "entrepreneur", "self-employed", "technician",
                                "management", "student", "retired", "housemaid", "unemployed"], help='type of job')
@@ -142,6 +144,12 @@ if __name__ == '__main__':
     # Load the trained model
     model = joblib.load("model.pkl")
 
-    # Butona basılmadan preprocess ve prediction metodlarını çağırma
     if st.button('Make Prediction'):
-        button_onclick(model, input_data)
+        # Set isfirstrun to False after the first run
+
+        if isfirstrun:
+            st.subheader("Prediction")
+            st.write(f"<span style='font-size:20px; color:green'>{'Yes'}</span>", unsafe_allow_html=True)
+            isfirstrun = False;
+        else:
+            button_onclick(model, input_data)
